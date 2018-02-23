@@ -6,9 +6,9 @@ const cors = require('cors')
 const mongoose = require('mongoose')
 const blogRouter = require('./controllers/blogs')
 const middleware = require('./utils/middleware')
+const config = require('./utils/config')
 
-const mongoUrl = 'mongodb://@ds247058.mlab.com:47058/blogilista'
-mongoose.connect(mongoUrl)
+mongoose.connect(config.mongoUrl)
 mongoose.Promise = global.Promise
 
 app.use(cors())
@@ -19,9 +19,16 @@ app.use(middleware.error)
 */
 app.use('/api/blogs', blogRouter)
 
+const server = http.createServer(app)
 
-
-const PORT = 3003
-app.listen(PORT, () => {
-  console.log(`Server running on port ${PORT}`)
+server.listen(config.port, () => {
+  console.log(`Server running on port ${config.port}`)
 })
+
+server.on('close', () => {
+  mongoose.connection.close()
+})
+
+module.exports = {
+  app, server
+}
