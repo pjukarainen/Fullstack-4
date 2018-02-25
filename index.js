@@ -7,6 +7,7 @@ const mongoose = require('mongoose')
 const blogRouter = require('./controllers/blogs')
 const middleware = require('./utils/middleware')
 const config = require('./utils/config')
+const usersRouter = require('./controllers/users')
 
 mongoose.connect(config.mongoUrl)
 mongoose.Promise = global.Promise
@@ -18,6 +19,7 @@ app.use(middleware.logger)
 app.use(middleware.error)
 */
 app.use('/api/blogs', blogRouter)
+app.use('/api/users', usersRouter)
 
 const server = http.createServer(app)
 
